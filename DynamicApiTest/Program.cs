@@ -1,4 +1,4 @@
-using DynamicApiTest;
+using DynamicApiTest.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,19 +27,6 @@ app.MapGet("/swagger.json", async (HttpContext context) =>
     var swaggerJson = dynamicService.GenerateSwaggerJson();
     context.Response.ContentType = "application/json";
     await context.Response.WriteAsync(swaggerJson);
-});
-
-// Endpoint para adicionar novos endpoints dinamicamente
-app.MapPost("/api/add-endpoint", async (HttpContext context) =>
-{
-    var path = "/api/custom-endpoint";
-    dynamicService.AddEndpoint(path, "get", "Dynamic endpoint test", async ctx =>
-    {
-        ctx.Response.ContentType = "application/json";
-        await ctx.Response.WriteAsync("{\"message\": \"This is a dynamic endpoint!\"}");
-    });
-
-    await context.Response.WriteAsync($"Dynamic endpoint {path} added!");
 });
 
 app.UseSwaggerUI(options =>
